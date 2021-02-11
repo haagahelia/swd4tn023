@@ -20,6 +20,7 @@ ERIKOISTAPAUKSET = {
 
 @pytest.fixture
 def ryhmitelty():
+    # Katso: https://docs.pytest.org/en/stable/fixture.html
     kaikki = {**POSTINUMEROT, **ERIKOISTAPAUKSET}
     return postinumerot.ryhmittele_toimipaikoittain(kaikki)
 
