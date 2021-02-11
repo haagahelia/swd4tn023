@@ -4,6 +4,7 @@ import http_pyynto
 def ryhmittele_toimipaikoittain(numero_sanakirja):
     paikat = {}
     for numero, nimi in numero_sanakirja.items():
+        nimi = normalisoi_nimi(nimi)
         if nimi not in paikat:
             paikat[nimi] = []
 
@@ -12,16 +13,30 @@ def ryhmittele_toimipaikoittain(numero_sanakirja):
     return paikat
 
 
-postinumerot = http_pyynto.hae_postinumerot()
+def normalisoi_nimi(nimi):
+    return nimi.upper().strip().replace(' ', '').replace('-', '')
 
-toimipaikat = ryhmittele_toimipaikoittain(postinumerot)
 
-toimipaikka = input('Kirjoita postitoimipaikka: ').strip().upper()
+def etsi_postinumerot(nimi, toimipaikat_dict):
+    normalisoitu = normalisoi_nimi(nimi)
+    return toimipaikat_dict.get(normalisoitu, [])
 
-if toimipaikka in toimipaikat:
-    toimipaikat[toimipaikka].sort()
 
-    loydetyt_str = ', '.join(toimipaikat[toimipaikka])
-    print('Postinumerot: ' + loydetyt_str)
-else:
-    print('Toimipaikkaa ei löytynyt')
+def main():
+    postinumerot = http_pyynto.hae_postinumerot()
+
+    toimipaikat = ryhmittele_toimipaikoittain(postinumerot)
+
+    toimipaikka = input('Kirjoita postitoimipaikka: ')
+
+    loydetyt = etsi_postinumerot(toimipaikka, toimipaikat)
+
+    if loydetyt:
+        loydetyt = sorted(loydetyt)
+        print('Postinumerot: ' + ', '.join(loydetyt))
+    else:
+        print('Toimipaikkaa ei löytynyt')
+
+
+if __name__ == '__main__':
+    main()
