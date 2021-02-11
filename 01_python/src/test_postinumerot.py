@@ -9,6 +9,7 @@ POSTINUMEROT = {
 }
 
 ERIKOISTAPAUKSET = {
+    "00314": "SMARTPSOT",  # kirjoitusvirhe!
     "43800": "KIVIJÄRVI",
     "65374": "SMART POST",
     "74704": "SMARTPOST",
@@ -54,3 +55,16 @@ def test_etsi_smart_post_eri_kirjoitsasuilla(ryhmitelty):
     smart_post = postinumerot.etsi_postinumerot('SMART POST', ryhmitelty)
 
     assert SMARTPOST == smartpost == smart_post == ["65374", "74704", "96204"]
+
+
+def test_muunnokset_sisaltavat_vaihtuneet_perakkaiset_merkit():
+    muunnokset = postinumerot.luo_muunnokset("SMARTPOST")
+
+    assert "SMARTPOST" in muunnokset
+    assert "SMARTPSOT" in muunnokset
+
+
+def test_etsi_samankaltaiset_loytaa_nimen_kirjoitusvirheilla(ryhmitelty):
+    tulos = postinumerot.etsi_samankaltaiset('SMARTPSOT', ryhmitelty)
+
+    assert sorted(tulos) == ["00314", "65374", "74704", "96204"]

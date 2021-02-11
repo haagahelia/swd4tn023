@@ -22,6 +22,32 @@ def etsi_postinumerot(nimi, toimipaikat_dict):
     return toimipaikat_dict.get(normalisoitu, [])
 
 
+def etsi_samankaltaiset(nimi, toimipaikat_dict):
+    normalisoitu = normalisoi_nimi(nimi)
+    muunnokset = luo_muunnokset(normalisoitu)
+    postinumerot = []
+    for hakusana in muunnokset:
+        postinumerot += etsi_postinumerot(hakusana, toimipaikat_dict)
+    return postinumerot
+
+
+def luo_muunnokset(termi):
+    """
+    Luo kaikki muunnokset, jossa kaksi peräkkäistä kirjainta on vaihtunut keskenään
+    """
+    muunnokset = {termi}  # set-tietorakenne ei salli duplikaatteja!
+    for i in range(0, len(termi) - 2):
+        muunnos = vaihda_paikkaa(termi, i, i+1)
+        muunnokset.add(muunnos)
+    return muunnokset
+
+
+def vaihda_paikkaa(merkkijono, i, j):
+    kirjaimet = list(merkkijono)
+    kirjaimet[i], kirjaimet[j] = kirjaimet[j], kirjaimet[i]
+    return ''.join(kirjaimet)
+
+
 def main():
     postinumerot = http_pyynto.hae_postinumerot()
 
@@ -29,7 +55,7 @@ def main():
 
     toimipaikka = input('Kirjoita postitoimipaikka: ')
 
-    loydetyt = etsi_postinumerot(toimipaikka, toimipaikat)
+    loydetyt = etsi_samankaltaiset(toimipaikka, toimipaikat)
 
     if loydetyt:
         loydetyt = sorted(loydetyt)
