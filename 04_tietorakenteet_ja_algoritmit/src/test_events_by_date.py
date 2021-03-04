@@ -39,8 +39,8 @@ def test_get_start_time_with_no_starting_day():
 
 
 def test_get_name_returns_english_name_when_finnish_does_not_exist():
-    tapahtuma = {'name': {'fi': None, 'en': 'Christmas'}}
-    assert 'Christmas' == events_by_date.get_name(tapahtuma)
+    christmas = {'name': {'fi': None, 'en': 'Christmas'}}
+    assert 'Christmas' == events_by_date.get_name(christmas)
 
 
 def test_get_name_returns_finnish_name_when_both_english_and_finnish_exist():
