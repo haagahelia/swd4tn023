@@ -1,11 +1,30 @@
 import events_by_date
 from datetime import datetime, timedelta
+from pytest import fixture
 
 
-def test_swap_two_strings():
-    names = ['Matti', 'Teppo', 'Paula']
-    events_by_date.swap(names, 0, 2)
-    assert names == ['Paula', 'Teppo', 'Matti']
+@fixture
+def last_week_event():
+    last_week = (datetime.utcnow() - timedelta(days=7)).isoformat()
+    return {'event_dates': {'starting_day': last_week}}
+
+
+@fixture
+def next_week_event():
+    next_week = (datetime.utcnow() + timedelta(days=7)).isoformat()
+    return {'event_dates': {'starting_day': next_week}}
+
+
+@fixture
+def next_year_event():
+    next_year = (datetime.utcnow() + timedelta(days=365)).isoformat()
+    return {'event_dates': {'starting_day': next_year}}
+
+
+def test_swap_two_events(last_week_event, next_week_event, next_year_event):
+    events = [next_year_event, next_week_event, last_week_event]
+    events_by_date.swap(events, 0, 2)
+    assert events == [last_week_event, next_week_event, next_year_event]
 
 
 def test_get_start_time():
@@ -29,25 +48,15 @@ def test_get_name_returns_finnish_name_when_both_english_and_finnish_exist():
     assert 'Joulu' == events_by_date.get_name(event_with_two_names)
 
 
-def test_bubble_sort():
-    dec24 = {'event_dates': {'starting_day': '2022-12-24T12:00:00Z'}}
-    jan1 = {'event_dates': {'starting_day': '2022-01-01T12:00:00Z'}}
+def test_bubble_sort(last_week_event, next_week_event, next_year_event):
+    events = [next_year_event, last_week_event, next_week_event]
 
-    events = [dec24, jan1]
     events_by_date.bubble_sort(events)
 
-    assert events == [jan1, dec24]
+    assert events == [last_week_event, next_week_event, next_year_event]
 
 
-def test_next_month_filter():
-    last_week = (datetime.utcnow() - timedelta(days=7)).isoformat()
-    next_week = (datetime.utcnow() + timedelta(days=7)).isoformat()
-    next_year = (datetime.utcnow() + timedelta(days=365)).isoformat()
-
-    last_week_event = {'event_dates': {'starting_day': last_week}}
-    next_week_event = {'event_dates': {'starting_day': next_week}}
-    next_year_event = {'event_dates': {'starting_day': next_year}}
-
+def test_next_month_filter(last_week_event, next_week_event, next_year_event):
     events = [last_week_event, next_week_event, next_year_event]
     filtered = list(filter(events_by_date.next_month_filter, events))
 
