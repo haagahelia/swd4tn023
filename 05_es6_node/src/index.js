@@ -12,7 +12,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/postitoimipaikka', async function (req, res) {
-    let postalCode = req.query.numero;
+    let postalCode = req.query.numero || '';
     let districtName = await getPostalDistrict(postalCode);
     res.json({
         postinumero: postalCode,

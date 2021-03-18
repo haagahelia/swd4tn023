@@ -21,12 +21,14 @@ async function loadCachedJson() {
 
 async function getPostalDistrict(postalCode) {
     let data = await loadCachedJson();
-    return data[postalCode.toUpperCase()] || null;
+    return data[postalCode] || null;
 }
 
 async function getPostalCodes(district) {
     let data = await loadCachedJson();
-    return Object.entries(data)
+    let codesAndNames = Object.entries(data);
+
+    return codesAndNames
         .filter(([code, name]) => name.toUpperCase() === district.toUpperCase())
         .map(([code, name]) => code);
 }
