@@ -13,8 +13,8 @@ async function getPostalDistrict(postalCode) {
 async function getPostalCodes(district) {
     let data = await loadJson();
     return Object.entries(data)
-        .filter(([_code, name]) => name.toUpperCase() === district.toUpperCase())
-        .map(([code, _name]) => code);
+        .filter(([code, name]) => name.toUpperCase() === district.toUpperCase())
+        .map(([code, name]) => code);
 }
 
 
