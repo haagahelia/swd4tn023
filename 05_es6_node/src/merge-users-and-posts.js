@@ -13,3 +13,5 @@ async function main() {
 
     fs.writeFileSync('output.json', jsonString);
 }
+
+main();
