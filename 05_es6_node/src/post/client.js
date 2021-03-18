@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const NodeCache = require('node-cache');
 
-const cache = new NodeCache();
+const cache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
 
 async function loadJson() {
     let response = await fetch('https://raw.githubusercontent.com/theikkila/postinumerot/master/postcode_map_light.json');
